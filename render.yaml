@@ -1,0 +1,20 @@
+# render.yaml
+services:
+  - type: web
+    name: asvita-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    healthCheckPath: /api/v1/storage/ping
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DB_SSLMODE
+        value: require
+      - key: UPLOAD_FOLDER
+        value: /data/uploads
+    disk:
+      name: dataroom-data
+      mountPath: /data
+      sizeGB: 1
