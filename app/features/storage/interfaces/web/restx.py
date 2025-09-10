@@ -132,11 +132,27 @@ class FolderDetail(Resource):
         return "", 204
 
 # ---------- Files ----------
+# define upload endpoint
+
+
+upload_parser = ns.parser()
+upload_parser.add_argument(
+    "file",
+    type=FileStorage,
+    location="files",     # <-- importante
+    required=True,
+    help="PDF a subir",
+)
+# si quieres pasar nombre/desc opcionales en el mismo form:
+upload_parser.add_argument("name", type=str, location="form")
+upload_parser.add_argument("description", type=str, location="form")
 
 
 @ns.route("/datarooms/<uuid:dataroom_id>/folders/<uuid:folder_id>/files")
 class FileUpload(Resource):
     @ns.expect(upload_parser)
+    # <-- esto hace que Swagger muestre el selector de archivos
+    @ns.doc(consumes=["multipart/form-data"])
     @ns.marshal_with(file_model, code=201)
     def post(self, dataroom_id: UUID, folder_id: UUID):
         """Sube un PDF."""
@@ -144,7 +160,7 @@ class FileUpload(Resource):
         saved = upload_pdf(
             dataroom_id=dataroom_id,
             folder_id=folder_id,
-            file_storage=args["file"],
+            file_storage=args["file"],  # nombre del campo: "file"
             upload_dir=current_app.config["UPLOAD_FOLDER"],
         )
         return saved, 201
