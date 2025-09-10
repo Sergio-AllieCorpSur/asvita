@@ -32,8 +32,26 @@ def create_app():
     migrate.init_app(app, db)
 
     # CORS
-    CORS(app, resources={
-         r"/api/*": {"origins": ["http://localhost:3000", "*"]}})
+    CORS(
+        app,
+        resources={r"/api/*": {
+            "origins": [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "https://asvita-front.onrender.com",
+            ]
+        }},
+        methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "X-Fields",            # <- si lo usas
+        ],
+        expose_headers=[
+            "Content-Disposition",  # <- si devuelves descargas/streams
+        ],
+        supports_credentials=False,
+    )
 
     # Rutas / Swagger (RESTX)
     register_routes(app)
