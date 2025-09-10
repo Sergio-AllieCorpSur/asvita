@@ -6,7 +6,7 @@ from uuid import UUID
 
 # services existentes
 from app.features.storage.aplications.services.datarooms_services import (
-    create_dataroom, list_datarooms,
+    create_dataroom, list_datarooms, get_dataroom
 )
 from app.features.storage.aplications.services.folders_services import (
     create_folder, list_folder_contents, rename_folder, delete_folder_recursive,
@@ -90,6 +90,17 @@ class DataroomList(Resource):
         dr = create_dataroom(
             name=data["name"], description=data.get("description"))
         return dr, 201
+
+
+@ns.route("/datarooms/<uuid:dataroom_id>")
+class DataroomDetail(Resource):
+    @ns.marshal_with(dataroom_model)
+    def get(self, dataroom_id: UUID):
+        """Obtiene un dataroom por ID."""
+        dr = get_dataroom(dataroom_id)
+        if not dr:
+            ns.abort(404, "Dataroom no encontrado")
+        return dr
 
 # ---------- Folders ----------
 

@@ -12,3 +12,7 @@ def create_dataroom(name: str, description: str | None = None) -> Dataroom:
 
 def list_datarooms() -> list[Dataroom]:
     return Dataroom.query.order_by(Dataroom.created_at.desc()).all()
+
+
+def get_dataroom(dataroom_id):
+    return Dataroom.query.filter(Dataroom.id == dataroom_id).first()
