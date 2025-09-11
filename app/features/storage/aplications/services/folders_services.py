@@ -68,18 +68,6 @@ def list_folders(dataroom_id: UUID) -> list[dict]:
     ]
 
 
-def list_folder_contents(dataroom_id: UUID, folder_id: UUID) -> dict:
-    Folder.query.filter_by(
-        id=folder_id, dataroom_id=dataroom_id).first_or_404()
-    subfolders = Folder.query.filter_by(
-        parent_id=folder_id).order_by(Folder.name).all()
-    files = File.query.filter_by(folder_id=folder_id).order_by(File.name).all()
-    return {
-        "folders": [{"id": str(f.id), "name": f.name, "path": f.path} for f in subfolders],
-        "files": [{"id": str(x.id), "name": x.name, "size_bytes": x.size_bytes, "version": x.version} for x in files],
-    }
-
-
 def rename_folder(folder_id: UUID, new_name: str) -> Folder:
     f = Folder.query.get_or_404(folder_id)
     # asegura nombre único entre hermanos
