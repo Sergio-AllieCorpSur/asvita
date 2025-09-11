@@ -128,6 +128,14 @@ class FolderContents(Resource):
         return list_folder_contents(dataroom_id=dataroom_id, folder_id=folder_id)
 
 
+@ns.route("/datarooms/<uuid:dataroom_id>/folders")
+class FolderContents(Resource):
+    @ns.marshal_with(folder_contents_model)
+    def get(self, dataroom_id: UUID, folder_id: UUID):
+        """Lista de folders."""
+        return list_folder(dataroom_id=dataroom_id)
+
+
 @ns.route("/folders/<uuid:folder_id>")
 class FolderDetail(Resource):
     @ns.expect(rename_parser, validate=True)
