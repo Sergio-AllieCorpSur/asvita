@@ -9,7 +9,7 @@ from app.features.storage.aplications.services.datarooms_services import (
     create_dataroom, list_datarooms, get_dataroom
 )
 from app.features.storage.aplications.services.folders_services import (
-    create_folder, list_folder_contents, rename_folder, delete_folder_recursive, list_folders
+    create_folder, list_folder_contents, rename_folder, delete_folder_recursive, list_folders, list_files
 )
 from app.features.storage.aplications.services.storege_services import (
     upload_pdf, rename_file, delete_file, get_file_by_id, get_file_disk_path,
@@ -134,6 +134,14 @@ class DataroomFolders(Resource):
     def get(self, dataroom_id: UUID):
         """Lista TODOS los folders que pertenecen a un dataroom."""
         return list_folders(dataroom_id=dataroom_id)
+
+
+@ns.route("/folders/<uuid:folder_id>/files")
+class FolderFiles(Resource):
+    @ns.marshal_list_with(file_model, code=200)
+    def get(self, folder_id: UUID):
+        """Lista TODOS los archivos que pertenecen a un folder."""
+        return list_files(folder_id=folder_id)
 
 
 @ns.route("/folders/<uuid:folder_id>")
