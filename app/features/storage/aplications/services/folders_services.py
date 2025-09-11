@@ -41,11 +41,23 @@ def create_folder(dataroom_id: UUID, parent_id: str | None, name: str) -> Folder
     return folder
 
 
-def list_folder(dataroom_id: UUID) -> list[Folder]:
-    dr = Dataroom.query.get_or_404(dataroom_id)
-    folders = Folder.query.filter_by(
-        dataroom_id=dr.id).order_by(Folder.path).all()
-    return [{"id": str(f.id), "name": f.name, "path": f.path, "parent_id": str(f.parent_id) if f.parent_id else None} for f in folders]
+def list_folders(dataroom_id: UUID) -> list[dict]:
+    # opcional: 404 si no existe el dataroom
+    Dataroom.query.get_or_404(dataroom_id)
+
+    folders = (Folder.query
+               .filter_by(dataroom_id=dataroom_id)
+               .order_by(Folder.path)
+               .all())
+    return [
+        {
+            "id": str(f.id),
+            "name": f.name,
+            "path": f.path,
+            "parent_id": str(f.parent_id) if f.parent_id else None,
+        }
+        for f in folders
+    ]
 
 
 def list_folder_contents(dataroom_id: UUID, folder_id: UUID) -> dict:
