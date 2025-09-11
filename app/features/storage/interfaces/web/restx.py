@@ -105,7 +105,7 @@ class DataroomDetail(Resource):
 # ---------- Folders ----------
 
 
-@ns.route("/datarooms/<uuid:dataroom_id>/folders")
+@ns.route("/datarooms/<uuid:dataroom_id>")
 class FolderCreate(Resource):
     @ns.expect(ns.model("CreateFolder", {
         "name": fields.String(required=True),
@@ -151,18 +151,16 @@ class FolderDetail(Resource):
         return "", 204
 
 # ---------- Files ----------
-# define upload endpoint
 
 
 upload_parser = ns.parser()
 upload_parser.add_argument(
     "file",
     type=FileStorage,
-    location="files",     # <-- importante
+    location="files",
     required=True,
     help="PDF a subir",
 )
-# si quieres pasar nombre/desc opcionales en el mismo form:
 upload_parser.add_argument("name", type=str, location="form")
 upload_parser.add_argument("description", type=str, location="form")
 
