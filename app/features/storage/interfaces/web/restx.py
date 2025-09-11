@@ -120,14 +120,6 @@ class FolderCreate(Resource):
         return {"id": str(f.id), "name": f.name, "path": f.path, "parent_id": str(f.parent_id) if f.parent_id else None}, 201
 
 
-@ns.route("/datarooms/<uuid:dataroom_id>/folders/<uuid:folder_id>/contents")
-class FolderContents(Resource):
-    @ns.marshal_with(folder_contents_model)
-    def get(self, dataroom_id: UUID, folder_id: UUID):
-        """Lista subcarpetas y archivos de una carpeta."""
-        return list_folder_contents(dataroom_id=dataroom_id, folder_id=folder_id)
-
-
 @ns.route("/datarooms/<uuid:dataroom_id>/folders")
 class DataroomFolders(Resource):
     @ns.marshal_list_with(folder_model, code=200)
